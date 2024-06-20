@@ -82,17 +82,56 @@ posts.forEach(element => {
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#" data-postid="${element.id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${element.likes}</b> persone
+                        Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
                     </div>
                 </div> 
             </div>            
-        </div>`
+        </div>`;
 });
 
 
+// creo costante del bottone
+const buttons = document.querySelectorAll('.js-like-button');
+
+// creo array per gli id
+const clickedID = [];
+
+// ciclo for each per ogni bottone
+buttons.forEach(element => {
+    element.addEventListener('click', 
+        function(event) {
+        
+        // prevent default per evitare che vada sempre a inizio pagina
+        event.preventDefault();
+
+        // aggiungiamo la classe al div clickato
+        element.classList.toggle('like-button--liked');
+
+        // recuperiamo il post id
+        const idNum = element.getAttribute('data-postid');
+        console.log(idNum);
+
+        // creiamo un like counter da associare grazie al post id
+        let likeCounter = document.getElementById(`like-counter-${idNum}`);
+        
+        // if per aggiungere id all'array se non lo abbiamo già
+        if (!(clickedID.includes(idNum))) {
+            clickedID.push(idNum);
+        }
+
+        // if: se la classe esiste, quindi è stato appena clickato, aumentare il counter dei likes, altrimenti diminuisce
+        if (element.classList.contains('like-button--liked')){
+            likeCounter=likeCounter.textContent++;
+        } else {
+            likeCounter=likeCounter.textContent--;
+        }
+        // console log degli id clickati almeno una volta
+        console.log(clickedID);
+    });
+});
